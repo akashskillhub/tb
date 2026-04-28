@@ -24,7 +24,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
 
-  const { push } = useRouter()
+  const { push, refresh } = useRouter()
 
   const loginSchema = z.object({
     email: z.string().email(),
@@ -41,10 +41,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       const data = await signin(userData).unwrap()
       if (data.result?.role === "admin") {
         push("/admin")
+        refresh()
         reset()
         toast.success("login success")
       } else {
         push("/employee")
+        refresh()
         reset()
         toast.success("login success")
       }
