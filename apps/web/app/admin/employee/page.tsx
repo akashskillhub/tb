@@ -46,7 +46,13 @@ export default function EmployeeDashboard() {
         name: z.string().min(3),
         mobile: z.string().min(3),
         email: z.string().email(),
-        profile: z.instanceof(FileList).optional(),
+        profile: z
+            .any()
+            .refine((file) => {
+                if (typeof window === "undefined") return true; // SSR safe
+                return !file || file.length === 0 || file[0] instanceof File;
+            }, "Invalid file")
+            .optional(),
         department: z.string().min(3),
         jobRole: z.string().min(3),
         doj: z.coerce.date(),
